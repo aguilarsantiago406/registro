@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Mail, Lock, LogIn } from 'lucide-react';
+import { Mail, Lock, LogIn, ShieldCheck } from 'lucide-react';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -37,70 +37,85 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary/20 to-background p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Iniciar Sesión</CardTitle>
-          <CardDescription className="text-center">
-            Ingresa tus credenciales para acceder
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      {/* CAMBIO ESTRUCTURAL: Tarjeta más ancha (max-w-3xl) y con layout flex horizontal (md:flex) */}
+      <Card className="w-full max-w-3xl shadow-xl overflow-hidden md:flex">
+        
+        {/* Panel Izquierdo: Bienvenida (Oculto en móvil) */}
+        <div className="hidden md:flex md:w-1/2 flex-col justify-center p-8 lg:p-12 bg-card-foreground/5">
+          <ShieldCheck className="h-16 w-16 text-primary mb-6" />
+          <h1 className="text-3xl font-bold mb-4">Bienvenido de Nuevo</h1>
+          <p className="text-muted-foreground text-lg">
+            Accede a tu cuenta para gestionar tus proyectos y perfil.
+          </p>
+        </div>
+
+        {/* Panel Derecho: Formulario */}
+        <div className="w-full md:w-1/2 p-8 lg:p-12">
+          <CardHeader className="p-0 mb-6">
+            <CardTitle className="text-3xl font-bold">Iniciar Sesión</CardTitle>
+            <CardDescription>
+              Ingresa tus credenciales para acceder
+            </CardDescription>
+          </CardHeader>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* CAMBIO ESTRUCTURAL: Se elimina CardContent y CardFooter para un flujo de formulario simple */}
             <div className="space-y-2">
               <Label htmlFor="email">Correo electrónico</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="tu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-9"
+                  className="pl-10 h-11 text-base" // Campo más grande
                   disabled={isLoading}
                 />
               </div>
             </div>
+            
             <div className="space-y-2">
               <Label htmlFor="password">Contraseña</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-9"
+                  className="pl-10 h-11 text-base" // Campo más grande
                   disabled={isLoading}
                 />
               </div>
             </div>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+            
             <Button 
               type="submit" 
-              className="w-full" 
+              className="w-full h-11 text-base font-semibold" // Botón más grande
               disabled={isLoading}
             >
               {isLoading ? (
                 'Iniciando sesión...'
               ) : (
                 <>
-                  <LogIn className="mr-2 h-4 w-4" />
+                  <LogIn className="mr-2 h-5 w-5" />
                   Iniciar Sesión
                 </>
               )}
             </Button>
-            <p className="text-sm text-center text-muted-foreground">
-              ¿No tienes cuenta?{' '}
-              <Link to="/register" className="text-primary hover:underline font-medium">
-                Regístrate aquí
-              </Link>
-            </p>
-          </CardFooter>
-        </form>
+          </form>
+
+          <p className="text-sm text-center text-muted-foreground mt-8">
+            ¿No tienes cuenta?{' '}
+            <Link to="/register" className="text-primary hover:underline font-medium">
+              Regístrate aquí
+            </Link>
+          </p>
+        </div>
       </Card>
     </div>
   );
