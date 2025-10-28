@@ -1,8 +1,24 @@
-import axios from "axios";
+import { mockProducts, findProductById } from '@/mocks/products.data.js'; // Ajusta la ruta si es necesario
 
-export const api = axios.create({
-  baseURL: "https://fakestoreapi.com",
-});
+export const getProducts = () => {
+  console.log("Simulando fetch a /products...");
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ data: mockProducts }); 
+    }, 800); 
+  });
+};
 
-export const getProducts = () => api.get("/products?limit=12");
-export const getProductById = (id) => api.get(`/products/${id}`);
+export const getProductById = (id) => {
+  console.log(`Simulando fetch a /products/${id}...`);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const product = findProductById(id);
+      if (product) {
+        resolve({ data: product }); 
+      } else {
+        reject(new Error("Producto no encontrado"));
+      }
+    }, 500);
+  });
+};
