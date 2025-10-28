@@ -1,68 +1,62 @@
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { LogOut, Mail, Phone, User, Globe, Shield } from 'lucide-react';
-import { toast } from 'sonner';
+import { LogOut, User, Mail, Phone, Globe, Shield, Store } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 
 export const Profile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      toast.success('Sesión cerrada exitosamente');
-      navigate('/login');
-    } catch (error) {
-      toast.error('Error al cerrar sesión');
-    }
+    await logout();
+    navigate('/login');
   };
 
-  if (!user) {
-    return null;
-  }
-
-  const getInitials = () => {
-    return user.name.substring(0, 2).toUpperCase();
+  const getInitials = (name: string) => {
+    const names = name.split(' ');
+    if (names.length > 1) {
+      return (names[0][0] + names[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
   };
 
   return (
-    <div className="min-h-screen p-4 py-8">
-      {/* CAMBIO ESTRUCTURAL: Layout de Grid (1 col en móvil, 3 en desktop) */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Columna Izquierda: Perfil y Acciones */}
-        <div className="lg:col-span-1 space-y-6">
-          <Card className="shadow-lg">
-            <CardContent className="pt-6 flex flex-col items-center text-center">
-              <Avatar className="h-24 w-24 mb-4">
-                <AvatarFallback className="bg-primary text-primary-foreground text-4xl">
-                  {getInitials()}
-                </AvatarFallback>
-              </Avatar>
-              <h2 className="text-2xl font-bold">{user.name}</h2>
-              <p className="text-lg text-muted-foreground">@{user.user_name}</p>
-              <Badge variant="secondary" className="text-sm px-4 py-2 mt-4">
-                <Shield className="mr-2 h-4 w-4" />
+    <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="md:col-span-1 space-y-6">
+          
+          <Card className="flex flex-col items-center p-6 bg-card">
+            <Avatar className="h-24 w-24 mb-4">
+              <AvatarFallback className="text-4xl bg-primary text-primary-foreground">
+                {user ? getInitials(user.name) : 'UU'}
+              </AvatarFallback>
+            </Avatar>
+            <h2 className="text-2xl font-bold">{user?.name}</h2>
+            <p className="text-muted-foreground">@{user?.user_name}</p>
+            {user?.role?.name === 'Admin' && (
+              <div className="mt-2 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-muted text-muted-foreground">
+                <Shield className="h-3 w-3 mr-1" />
                 {user.role.name}
-              </Badge>
-            </CardContent>
+              </div>
+            )}
           </Card>
 
-          <Card className="shadow-lg">
+          <Card className="bg-card">
             <CardHeader>
               <CardTitle>Acciones</CardTitle>
             </CardHeader>
-            <CardContent>
-              <Button 
-                variant="destructive" 
-                onClick={handleLogout}
-                className="w-full"
-              >
+            <CardContent className="space-y-3">
+              
+              <Button variant="outline" className="w-full justify-start" asChild>
+                <Link to="/products">
+                  <Store className="mr-2 h-4 w-4" />
+                  Ver Tienda
+                </Link>
+              </Button>
+
+              <Button variant="destructive" className="w-full justify-start" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Cerrar Sesión
               </Button>
@@ -70,64 +64,61 @@ export const Profile = () => {
           </Card>
         </div>
 
-        {/* Columna Derecha: Información detallada */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="shadow-lg">
+        <div className="md:col-span-2 space-y-6">
+          
+          <Card className="bg-card">
             <CardHeader>
               <CardTitle>Información de Contacto</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              {/* CAMBIO ESTRUCTURAL: Ítems de lista rediseñados con icono acentuado */}
+            <CardContent className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 p-3 rounded-lg bg-primary/10">
+                <div className="bg-muted p-3 rounded-lg">
                   <Mail className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Email</p>
-                  <p className="text-base font-semibold">{user.email}</p>
+                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="font-medium">{user?.email}</p>
                 </div>
               </div>
-              <Separator />
               <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 p-3 rounded-lg bg-primary/10">
+                <div className="bg-muted p-3 rounded-lg">
                   <Phone className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Teléfono</p>
-                  <p className="text-base font-semibold">{user.phone}</p>
+                  <p className="text-sm text-muted-foreground">Teléfono</p>
+                  <p className="font-medium">{user?.phone}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="shadow-lg">
+          <Card className="bg-card">
             <CardHeader>
               <CardTitle>Información Adicional</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 p-3 rounded-lg bg-primary/10">
+                <div className="bg-muted p-3 rounded-lg">
                   <User className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">ID de Usuario</p>
-                  <p className="text-base font-semibold">{user.id}</p>
+                  <p className="text-sm text-muted-foreground">ID de Usuario</p>
+                  <p className="font-medium">{user?.id}</p>
                 </div>
               </div>
-              <Separator />
               <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 p-3 rounded-lg bg-primary/10">
+                <div className="bg-muted p-3 rounded-lg">
                   <Globe className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">País</p>
-                  <p className="text-base font-semibold">{user.country.name}</p>
+                  <p className="text-sm text-muted-foreground">País</p>
+                  <p className="font-medium">{user?.country?.name}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
-        </div>
 
+        </div>
       </div>
     </div>
   );

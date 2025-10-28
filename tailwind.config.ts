@@ -2,7 +2,15 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  
+  // --- ESTA ES LA SECCIÓN CORREGIDA ---
+  // Tu versión anterior no incluía archivos ".jsx"
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  // --- FIN DE LA CORRECCIÓN ---
+
   prefix: "",
   theme: {
     container: {

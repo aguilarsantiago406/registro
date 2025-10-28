@@ -56,8 +56,8 @@ export const Register = () => {
         password: formData.password,
         last_session: new Date().toISOString().split('T')[0],
         account_statement: true,
-        document_type_id: 1, // Asumiendo DNI
-        country_id: 179, // Asumiendo Perú
+        document_type_id: 1, 
+        country_id: 179,
       };
 
       await authService.register(registerData);
@@ -66,30 +66,23 @@ export const Register = () => {
     } catch (error: any) {
       console.error('Register error:', error);
       
-      // ----- INICIO DE LA MEJORA -----
       if (error.response && error.response.data) {
         const errors = error.response.data;
         
-        // Si el backend envía un error de validación (ej. Laravel/Django)
-        // { "document_number": ["..."], "phone": ["..."] }
         if (typeof errors === 'object' && !errors.message && Object.keys(errors).length > 0) {
           const firstErrorKey = Object.keys(errors)[0];
           const firstErrorMessage = Array.isArray(errors[firstErrorKey]) ? errors[firstErrorKey][0] : errors[firstErrorKey];
           toast.error(`Error: ${firstErrorMessage}`);
-        
-        // Si el backend envía un error genérico (ej. { "message": "..." })
+      
         } else if (errors.message) {
           toast.error(errors.message);
         
-        // Otro tipo de error
         } else {
           toast.error('Error al registrar usuario. Intente más tarde.');
         }
       } else {
-        // Error de red
         toast.error('No se pudo conectar al servidor.');
       }
-      // ----- FIN DE LA MEJORA -----
       
     } finally {
       setIsLoading(false);
@@ -108,7 +101,6 @@ export const Register = () => {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* --- Input de Número de Documento --- */}
               <div className="space-y-2">
                 <Label htmlFor="document_number">Número de Documento</Label>
                 <div className="relative">
@@ -129,7 +121,6 @@ export const Register = () => {
                 </div>
               </div>
 
-              {/* --- Input de Nombre --- */}
               <div className="space-y-2">
                 <Label htmlFor="name">Nombre</Label>
                 <div className="relative">
@@ -147,7 +138,6 @@ export const Register = () => {
                 </div>
               </div>
 
-              {/* --- Input de Apellido Paterno --- */}
               <div className="space-y-2">
                 <Label htmlFor="paternal_lastname">Apellido Paterno</Label>
                 <Input
@@ -161,7 +151,6 @@ export const Register = () => {
                 />
               </div>
 
-              {/* --- Input de Apellido Materno --- */}
               <div className="space-y-2">
                 <Label htmlFor="maternal_lastname">Apellido Materno</Label>
                 <Input
@@ -175,7 +164,6 @@ export const Register = () => {
                 />
               </div>
 
-              {/* --- Input de Email --- */}
               <div className="space-y-2">
                 <Label htmlFor="email">Correo Electrónico</Label>
                 <div className="relative">
@@ -194,7 +182,6 @@ export const Register = () => {
                 </div>
               </div>
 
-              {/* --- Input de Teléfono --- */}
               <div className="space-y-2">
                 <Label htmlFor="phone">Teléfono</Label>
                 <div className="relative">
@@ -215,7 +202,6 @@ export const Register = () => {
                 </div>
               </div>
 
-              {/* --- Input de Nombre de Usuario --- */}
               <div className="space-y-2">
                 <Label htmlFor="user_name">Nombre de Usuario</Label>
                 <div className="relative">
@@ -233,7 +219,6 @@ export const Register = () => {
                 </div>
               </div>
 
-              {/* --- Input de Contraseña --- */}
               <div className="space-y-2">
                 <Label htmlFor="password">Contraseña</Label>
                 <div className="relative">
@@ -252,7 +237,6 @@ export const Register = () => {
                 </div>
               </div>
 
-              {/* --- Input de Confirmar Contraseña --- */}
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
                 <div className="relative">
