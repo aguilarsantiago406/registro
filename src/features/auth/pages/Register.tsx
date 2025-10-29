@@ -57,23 +57,26 @@ export const Register = () => {
         last_session: new Date().toISOString().split('T')[0],
         account_statement: true,
         document_type_id: 1, 
-        country_id: 179,
+        country_id: 179, 
       };
 
       await authService.register(registerData);
       toast.success('¡Registro exitoso! Ahora puedes iniciar sesión');
       navigate('/login');
-    } catch (error: any) {
+
+    } catch (error: unknown) { 
       console.error('Register error:', error);
       
-      if (error.response && error.response.data) {
-        const errors = error.response.data;
+      const err = error as { response?: { data?: any } };
+
+      if (err.response && err.response.data) {
+        const errors = err.response.data;
         
         if (typeof errors === 'object' && !errors.message && Object.keys(errors).length > 0) {
           const firstErrorKey = Object.keys(errors)[0];
           const firstErrorMessage = Array.isArray(errors[firstErrorKey]) ? errors[firstErrorKey][0] : errors[firstErrorKey];
           toast.error(`Error: ${firstErrorMessage}`);
-      
+        
         } else if (errors.message) {
           toast.error(errors.message);
         

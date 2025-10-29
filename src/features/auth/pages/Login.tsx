@@ -27,12 +27,12 @@ export const Login = () => {
     try {
       await login(email, password);
       toast.success('¡Inicio de sesión exitoso!');
-      
-      navigate('/profile'); 
-
-    } catch (error: any) {
+      navigate('/profile');
+    
+    } catch (error: unknown) { 
       console.error('Login error:', error);
-      toast.error(error.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.');
     } finally {
       setIsLoading(false);
     }

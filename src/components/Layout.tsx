@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { LogOut, User, Store } from 'lucide-react';
+import { LogOut, User, Store, Send } from 'lucide-react';
 
 export const Layout = () => {
   const { logout, user } = useAuth();
@@ -22,17 +22,25 @@ export const Layout = () => {
             Mi Tienda
           </Link>
 
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" asChild>
-              <Link to="/">
-                <User className="h-4 w-4 mr-2" />
-                {user?.user_name || 'Perfil'}
+          <div className="flex items-center gap-2 sm:gap-4">
+            
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/contact" className="flex items-center gap-1">
+                <Send className="h-4 w-4" />
+                <span className="hidden sm:inline">Contacto</span>
+              </Link>
+            </Button>
+
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/" className="flex items-center gap-1">
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline">{user?.user_name || 'Perfil'}</span>
               </Link>
             </Button>
             
             <Button variant="destructive" size="sm" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Cerrar Sesión
+              <LogOut className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Salir</span>
             </Button>
           </div>
         </nav>

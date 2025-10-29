@@ -4,6 +4,13 @@ import Loader from '../features/products/components/Loader';
 import ErrorMsg from '../features/products/components/ErrorMsg';
 
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -12,22 +19,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { Product } from '@/mocks/products.data'; 
 
 export default function Products() {
   const {
-    data: products,
+    data: products = [], 
     isLoading,
     isError,
     error
-  } = useQuery({
+  } = useQuery<Product[], Error>({ 
     queryKey: ['products'],
-    queryFn: async () => {
-      if (Math.random() < 0.2) {
-        throw new Error("Falla simulada del servicio (Error 500)");
-      }
-      const res = await getProducts();
-      return res.data;
-    }
+    queryFn: getProducts, 
   });
 
   if (isLoading) {
@@ -35,7 +37,7 @@ export default function Products() {
   }
 
   if (isError) {
-    return <ErrorMsg message={error.message} />;
+    return <ErrorMsg message={error?.message || "Error al cargar productos"} />;
   }
 
   return (
@@ -43,7 +45,7 @@ export default function Products() {
       <CardHeader>
         <CardTitle>Catálogo de Productos</CardTitle>
         <CardDescription>
-          Listado de productos disponibles desde la API simulada.
+          Listado de productos disponibles.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -58,33 +60,33 @@ export default function Products() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products?.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="h-12 w-12 object-contain rounded-md bg-white p-1"
-                  />
+            {products.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  No hay productos disponibles
                 </TableCell>
-                <TableCell className="font-medium max-w-xs truncate" title={product.title}>
-                  {product.title}
-                </TableCell>
-                <TableCell>{product.category}</TableCell>
-                <TableCell className="text-right">${product.price}</TableCell>
               </TableRow>
-            ))}
+            ) : (
+              products.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell>
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="h-12 w-12 object-contain rounded-md bg-white p-1"
+                    />
+                  </TableCell>
+                  <TableCell className="font-medium max-w-xs truncate" title={product.title}>
+                    {product.title}
+                  </TableCell>
+                  <TableCell>{product.category}</TableCell>
+                  <TableCell className="text-right">S/.{product.price}</TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </CardContent>
     </Card>
   );
 }
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";

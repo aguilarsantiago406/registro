@@ -56,8 +56,12 @@ export interface ProfileResponse {
   };
 }
 
+interface RegisterResponse {
+  message: string;
+}
+
 export const authService = {
-  register: async (data: RegisterData): Promise<any> => {
+  register: async (data: RegisterData): Promise<RegisterResponse> => { // 👈 Antes 'Promise<any>'
     const response = await api.post('/register', data);
     return response.data;
   },
@@ -73,6 +77,10 @@ export const authService = {
   },
 
   logout: async (): Promise<void> => {
-    await api.delete('/logout');
+    try {
+      await api.delete('/logout', { timeout: 1500 });
+    } catch (error) {
+      console.warn("API logout call failed, proceeding with client logout.");
+    }
   },
 };

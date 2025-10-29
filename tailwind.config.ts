@@ -1,16 +1,12 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate"; // 👈 1. IMPORTA "animate" AQUÍ
 
 export default {
   darkMode: ["class"],
-  
-  // --- ESTA ES LA SECCIÓN CORREGIDA ---
-  // Tu versión anterior no incluía archivos ".jsx"
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx}", // 👈 Asegúrate que esto cubra todo 'src'
   ],
-  // --- FIN DE LA CORRECCIÓN ---
-
   prefix: "",
   theme: {
     container: {
@@ -73,20 +69,12 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
@@ -95,5 +83,6 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  // 2. USA LA VARIABLE IMPORTADA AQUÍ (antes 'require')
+  plugins: [tailwindcssAnimate], 
 } satisfies Config;
